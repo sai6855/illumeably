@@ -1,0 +1,11 @@
+
+{
+    "manifest_version": 3,
+    "name": "Background Image Extension",
+    "description": "Changes the background image of a new tab",
+    "version": "1.0",
+    "chrome_url_overrides": {
+      "newtab": "newtab.html"
+    }
+  }
+  
