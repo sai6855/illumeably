@@ -1,4 +1,4 @@
-const colors = ["red", "blue", "voilet", "yellow", "green"];
+const colors = ["red", "blue", "black", "pink", "green"];
 
 document.body.style.backgroundColor = colors[Math.floor(Math.random() * 5)];
 
