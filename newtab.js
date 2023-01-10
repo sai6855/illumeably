@@ -3,7 +3,7 @@ const colors = ["red", "blue", "black", "brown", "green"];
 document.body.style.backgroundColor = colors[Math.floor(Math.random() * 5)];
 
 const anchor_link = document.getElementsByTagName("a")[0];
-const image = document.getElementsByTagName("img")[0];
+
 const premier_text = document.getElementsByClassName("premier-text")[0];
 
 const base_url = "http://localhost:1337";
@@ -44,13 +44,21 @@ setInterval(() => {
 }, 1000);
 
 const fetch_background_image = () => {
+  const image = document.getElementsByTagName("img")[0];
   fetch(base_url + "/api/new-tab-hero-images?populate=%2A")
     .then((res) => res.json())
     .then((res) => {
+      const active_of_images = res.data.filter(
+        (data) => data.attributes.active
+      );
+
       const url =
-        res.data[0].attributes.image.data.attributes.formats.thumbnail.url;
-      image.src = base_url + url;
-      image.style.visibility = "visible";
+        active_of_images[Math.floor(Math.random() * active_of_images.length)]
+          .attributes.image.data.attributes.formats.thumbnail.url;
+      if (image.style.visibility !== "visible") {
+        image.src = base_url + url;
+        image.style.visibility = "visible";
+      }
     });
 };
 fetch_background_image();
