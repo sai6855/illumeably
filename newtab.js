@@ -18,24 +18,28 @@ const fetch_youtube_premier_url = () => {
       const yyyy = day.getFullYear();
       let mm = day.getMonth() + 1; // Months start at 0!
       let dd = day.getDate();
-      let hours = day.getHours();
-      let minutues = day.getMinutes();
-      let sec = day.getSeconds();
 
       if (dd < 10) dd = "0" + dd;
       if (mm < 10) mm = "0" + mm;
-      if (hours < 10) hours = "0" + hours;
-      if (minutues < 10) minutues = "0" + minutues;
-      if (sec < 10) sec = "0" + sec;
 
-      const formattedToday = dd + "/" + mm + "/" + yyyy;
+      const remainingTime = (day.getTime() - new Date().getTime()) / 1000;
+
+      let days = Math.floor(remainingTime / 86400);
+      let hours = Math.floor((remainingTime % 86400) / 3600);
+      let minutes = Math.floor(((remainingTime % 86400) % 3600) / 60);
+      let seconds = Math.floor(((remainingTime % 86400) % 3600) % 60);
+      let display = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+      hours = hours + days * 24;
+      display = [
+        hours < 10 ? "0" + hours : hours,
+        minutes < 10 ? "0" + minutes : minutes,
+        seconds < 10 ? "0" + seconds : seconds,
+      ].join(":");
+
+      const formattedToday = +mm + "/" + dd + "/" + yyyy;
+      document.getElementById("premier-day").innerText = formattedToday;
       premier_text.innerHTML =
-        day.getTime() > new Date().getTime()
-          ? "Premiering on: " +
-            formattedToday +
-            " " +
-            [hours, minutues, sec].join(":")
-          : "";
+        remainingTime > 0 ? "Premiering in: " + display : "";
     });
 };
 fetch_youtube_premier_url();
