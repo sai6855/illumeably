@@ -12,9 +12,19 @@ const fetch_youtube_premier_url = () => {
   fetch(base_url + "/api/youtube-premier-urls")
     .then((res) => res.json())
     .then((res) => {
-      const url = res.data[0].attributes.url;
+      const sorted_dates = res.data
+        .filter(
+          (a) =>
+            new Date(a.attributes.premier_time).getTime() > new Date().getTime()
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.attributes.premier_time).getTime() -
+            new Date(b.attributes.premier_time).getTime()
+        );
+      const url = sorted_dates[0].attributes.url;
       anchor_link.href = url;
-      const day = new Date(res.data[0].attributes.premier_time);
+      const day = new Date(sorted_dates[0].attributes.premier_time);
       const yyyy = day.getFullYear();
       let mm = day.getMonth() + 1; // Months start at 0!
       let dd = day.getDate();
@@ -37,9 +47,10 @@ const fetch_youtube_premier_url = () => {
       ].join(":");
 
       const formattedToday = +mm + "/" + dd + "/" + yyyy;
-      document.getElementById("premier-day").innerText = formattedToday;
-      premier_text.innerHTML =
-        remainingTime > 0 ? "Premiering in: " + display : "";
+      if (remainingTime > 0) {
+        document.getElementById("premier-day").innerText = formattedToday;
+        premier_text.innerHTML = "Premiering in: " + display;
+      }
     });
 };
 fetch_youtube_premier_url();
